@@ -11,8 +11,8 @@ Yleisiä linkkejä:
 
 ##Sivustojen näkymät
 
-[Etusivu](laatopi.users.cs.helsinki.fi/tietokantaharkka/)
-[Login](laatopi.users.cs.helsinki.fi/tietokantaharkka/login)
-[Tehtavat](laatopi.users.cs.helsinki.fi/tietokantaharkka/tehtava)
-[Yksittainen](laatopi.users.cs.helsinki.fi/tietokantaharkka/tehtava/1)
-[Muokkaaminen](laatopi.users.cs.helsinki.fi/tietokantaharkka/tehtava/1/edit)
+* [Etusivu](laatopi.users.cs.helsinki.fi/tietokantaharkka/)
+* [Login](laatopi.users.cs.helsinki.fi/tietokantaharkka/login)
+* [Tehtavat](laatopi.users.cs.helsinki.fi/tietokantaharkka/tehtava)
+* [Yksittainen](laatopi.users.cs.helsinki.fi/tietokantaharkka/tehtava/1)
+* [Muokkaaminen](laatopi.users.cs.helsinki.fi/tietokantaharkka/tehtava/1/edit)
