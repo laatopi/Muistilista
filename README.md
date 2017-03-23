@@ -7,4 +7,12 @@ Yleisiä linkkejä:
 
 ## Työn aihe
 
-Aihekuvuas [linkki](http://advancedkittenry.github.io/suunnittelu_ja_tyoymparisto/aiheet/Muistilista.html) 
+[Aihekuvaus](http://advancedkittenry.github.io/suunnittelu_ja_tyoymparisto/aiheet/Muistilista.html) 
+
+##Sivustojen näkymät
+
+[Etusivu](laatopi.users.cs.helsinki.fi/tietokantaharkka/)
+[Login](laatopi.users.cs.helsinki.fi/tietokantaharkka/login)
+[Tehtavat](laatopi.users.cs.helsinki.fi/tietokantaharkka/tehtava)
+[Yksittainen](laatopi.users.cs.helsinki.fi/tietokantaharkka/tehtava/1)
+[Muokkaaminen](laatopi.users.cs.helsinki.fi/tietokantaharkka/tehtava/1/edit)
