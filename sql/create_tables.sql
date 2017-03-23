@@ -7,8 +7,8 @@ CREATE TABLE Kayttaja(
 CREATE TABLE Tehtava(
   tehtava_id SERIAL PRIMARY KEY,
   nimi varchar(50) NOT NULL, 
-  lisayspaiva DATE, NOT NULL
-  tarkeyasaste INTEGER, NOT NULL
+  lisayspaiva DATE NOT NULL,
+  tarkeyasaste INTEGER NOT NULL,
   deadline DATE,
   kayttaja_id INTEGER REFERENCES Kayttaja(kayttaja_id)
 );
@@ -16,17 +16,15 @@ CREATE TABLE Tehtava(
 CREATE TABLE Luokka(
   luokka_id SERIAL PRIMARY KEY,
   nimi varchar(50) NOT NULL,
-  ylaluokka  NOT NULL
+  ylaluokka INTEGER REFERENCES Luokka(luokka_id)
 );
 
-CREATE TABLE Player(
-  id SERIAL PRIMARY KEY,
-  name varchar(50) NOT NULL,
-  password varchar(50) NOT NULL
+CREATE TABLE LuokkaApuTaulukko(
+  tehtava_id INTEGER REFERENCES Tehtava(tehtava_id) NOT NULL,
+  luokka_id INTEGER REFERENCES Luokka(luokka_id) NOT NULL
 );
 
-CREATE TABLE Player(
-  id SERIAL PRIMARY KEY, -- SERIAL tyyppinen pääavain pitää huolen, että tauluun lisätyllä rivillä on aina uniikki pääavain. Kätevää!
-  name varchar(50) NOT NULL, -- Muista erottaa sarakkeiden määrittelyt pilkulla!
-  password varchar(50) NOT NULL
+CREATE TABLE AlaluokkaApuTaulukko(
+  ylaluokka_id INTEGER REFERENCES Luokka(luokka_id) NOT NULL,  
+  alaluokka_id INTEGER REFERENCES Luokka(luokka_id) NOT NULL
 );
