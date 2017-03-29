@@ -1,5 +1,6 @@
 <?php
 
+
 class HelloWorldController extends BaseController {
 
     public static function index() {
@@ -8,7 +9,15 @@ class HelloWorldController extends BaseController {
     }
 
     public static function sandbox() {
-        View::make('muokkaaminen.html');
+        $Taneli = kayttaja::find(1);
+        $kayttajat = kayttaja::all();
+        $Pyykki = tehtava::find(1);
+        $tehtavat = tehtava::all();
+        // Kint-luokan dump-metodi tulostaa muuttujan arvon
+        Kint::dump($kayttajat);
+        Kint::dump($Taneli);
+        Kint::dump($Pyykki);
+        Kint::dump($tehtavat);
     }
 
     public static function etusivu() {

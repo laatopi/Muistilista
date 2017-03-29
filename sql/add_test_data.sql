@@ -1,7 +1,7 @@
 -- Lisää INSERT INTO lauseet tähän tiedostoon
-INSERT INTO Player (name, password) VALUES ('Henri', 'Henri123');
 INSERT INTO Kayttaja (tunnus, salasana) VALUES ('Taneli','salasana');
-INSERT INTO Tehtava (nimi, lisayspaiva, tarkeysaste, deadline, kayttaja_id) VALUES ('Pyykkien pesu', '2013-03-27', 3, '2013-03-30', 1);
+INSERT INTO Tehtava (nimi, lisayspaiva, tarkeysaste, deadline, kuvaus, kayttaja_id) VALUES ('Pyykkien pesu', NOW(), 3, '2013-03-30', 'Pese kaikki pyykit! -Valkopyykit, lakanat, pyyhkeet sekä villapaidat!', 1);
+INSERT INTO Tehtava (nimi, lisayspaiva, suoritettu, tarkeysaste, deadline, kuvaus, kayttaja_id) VALUES ('Hampaiden harjaus', NOW(), 1 , 5, '2013-01-30', 'Harjaa hampaat koska ne on semi mädät', 1);
 INSERT INTO Luokka (nimi) VALUES ('Kotityöt');
 INSERT INTO Luokka (nimi) VALUES ('Hygienia');
 

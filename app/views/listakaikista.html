@@ -3,7 +3,7 @@
 <h1>Käyttäjän Topi Kaikki Tehtävät</h1>
 
 <p>
-    <a href="#" class="btn btn-success">Lisää tehtävä</a>
+    <a href="{{base_path}}/tehtava/uusi" class="btn btn-success">Lisää tehtävä</a>
 </p>
 
 <div class="checkbox">
@@ -28,18 +28,26 @@
     </thead>
 
     <tbody>
+        {% for tehtava in tehtavat %}
         <tr class="text-center">
-            <td><a href="#">Pyykkien pesu</a></td>
-            <td>22.03.2017</td>
-            <td>5</td>
-            <td><label class="label label-danger">EI</label></td>
-            <td>25.03.2017</td>
+            <td><a href="{{base_path}}/tehtava/{{tehtava.tehtava_id}}">{{tehtava.nimi}}</a></td>
+            <td>{{tehtava.lisayspaiva}}</td>
+            <td>{{tehtava.tarkeysaste}}</td>
+            <td>
+                {% if tehtava.suoritettu != 0%}
+                <label class="label label-success">KYLLÄ</label>
+                {% else %}
+                <label class="label label-danger">EI</label>
+                {% endif %}
+            </td>
+            <td>{{tehtava.deadline}}</td>
             <th><a href="#">Vapaa-aika</a>, <a href="#">Kotityöt</a></th>
-            <th><a class="btn btn-default btn-sm" href="#">Muokkaa</a></th>
+            <th><a class="btn btn-default btn-sm" href="{{base.path}}/tehtava/{{tehtava.tehtava_id}}/edit">Muokkaa</a></th>
         </tr>
+        {% endfor %}
     </tbody>
 </table>
 <p>
-    <a href="#" class="btn btn-success">Lisää tehtävä</a>
+    <a href="{{base_path}}/tehtava/uusi" class="btn btn-success">Lisää tehtävä</a>
 </p>
 {% endblock %}

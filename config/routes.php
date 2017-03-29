@@ -13,14 +13,23 @@ $routes->get('/login', function() {
 });
 
 $routes->get('/tehtava', function() {
-    HelloWorldController::all();
+    TehtavaController::lista();
 });
 
-$routes->get('/tehtava/1', function() {
-    HelloWorldController::single();
+$routes->get('/tehtava/uusi', function() {
+    TehtavaController::uusi();
+});
+
+
+$routes->get('/tehtava/:tehtava_id', function($tehtava_id) {
+    TehtavaController::yksittainen($tehtava_id);
 });
 
 $routes->get('/tehtava/1/edit', function() {
     HelloWorldController::edit();
+});
+
+$routes->post('/tehtava', function() {
+    TehtavaController::varastoi();
 });
 

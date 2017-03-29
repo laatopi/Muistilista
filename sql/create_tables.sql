@@ -7,9 +7,11 @@ CREATE TABLE Kayttaja(
 CREATE TABLE Tehtava(
   tehtava_id SERIAL PRIMARY KEY,
   nimi varchar(50) NOT NULL, 
-  lisayspaiva DATE NOT NULL,
-  tarkeyasaste INTEGER NOT NULL,
+  lisayspaiva DATE,
+  suoritettu INTEGER DEFAULT 0,
+  tarkeysaste INTEGER NOT NULL,
   deadline DATE,
+  kuvaus varchar(255),
   kayttaja_id INTEGER REFERENCES Kayttaja(kayttaja_id)
 );
 

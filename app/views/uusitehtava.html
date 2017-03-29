@@ -1,23 +1,18 @@
 {% extends "base.html" %}
 {% block content %}
-<h1>Muokkaa tehtävää Pyykkien pesu</h1>
+<h1>Lisää Uusi Tehtävä</h1>
 
-<form>
-    <div class="checkbox">
-        <label>
-            <input type="checkbox">
-            Suoritettu
-        </label>
-    </div>
+<form method="post" action="{{base_path}}/tehtava">
+
     <div class="form-group">
         <label>Nimi</label>
-        <input class="form-control" value="Pyykkien pesu" type="text">
+        <input name="nimi" class="form-control" type="text">
     </div>
-    <p></p>
+
     <div>
         <label>Tärkeysaste</label>
         <p class="small"></p>
-        <select>
+        <select id="kokeilu" name ="tarkeysaste" class="form-group">
             <option value="5">5</option>
             <option value="4">4</option>
             <option value="3">3</option>
@@ -25,18 +20,19 @@
             <option value="1">1</option>
         </select>
     </div>
-    <p></p>
+
     <div class="form-group">
         <label>Deadline</label>
-        <input class="form-control" value="25.03.2017" type="text">
+        <input name="deadline" class="form-control" type="text">
     </div>
+
     <div class="form-group">
         <label>Kuvaus</label>
-        <textarea class="form-control">Pese kaikki pyykit! -Valkopyykit, lakanat, pyyhkeet sekä villapaidat!
-        </textarea>
+        <textarea name="kuvaus" class="form-control"></textarea>
     </div>
+
     <div class="form-group">
-        <button type="submit" class="btn btn-primary">Tallenna</button>
+        <button type="submit" class="btn btn-primary">Lisää</button>
     </div>
 </form>
 {% endblock %}
