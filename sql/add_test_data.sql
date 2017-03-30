@@ -5,4 +5,3 @@ INSERT INTO Tehtava (nimi, lisayspaiva, suoritettu, tarkeysaste, deadline, kuvau
 INSERT INTO Luokka (nimi, kayttaja_id) VALUES ('Kotityöt', 1);
 INSERT INTO Luokka (nimi, kayttaja_id) VALUES ('Hygienia', 1);
 
-INSERT INTO Liitostaulukko (tehtava_id, luokka_id) VALUES (1, 1);

@@ -31,12 +31,17 @@
         <textarea name="kuvaus" class="form-control"></textarea>
     </div>
 
+    <h3>Luokat
+    </h3>
+    <div class="checkbox">
+    {% for luokka  in luokat %}
+        <label class="checkbox-inline"><input name="luokat[]" type="checkbox" value="{{luokka.luokka_id}}">{{luokka.nimi}}</label>
+    {% endfor %}
+    </div>
+    
     <div class="form-group">
         <button type="submit" class="btn btn-primary">Lisää</button>
     </div>
 </form>
 
-<div class="alert alert-success">
-    {{Uusi tehtävä lisätty!}}
-</div>
 {% endblock %}
