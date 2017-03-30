@@ -32,7 +32,7 @@ class TehtavaController extends BaseController {
 
         $tehtava->tallenna();
 
-        Redirect::to('/tehtava' . $tehtava->tehtava_id, array('message' => 'Tehtävä lisätty!'));
+        Redirect::to('/tehtava/' . $tehtava->tehtava_id, array('message' => 'Tehtävä lisätty!'));
     }
 
 }

@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Käyttäjän Topi Tehtäväluokat</h1>
+
+<p>
+    <a href="{{base_path}}/luokka/uusi" class="btn btn-success">Lisää luokka</a>
+</p>
+
+<table class="table table-striped table-bordered">
+    <thead>
+        <tr>
+            <th class ="text-center">Nimi</th>
+            <th class ="text-center">Tehtäviä</th>
+            <th></th>
+        </tr>
+
+    </thead>
+
+    <tbody>
+        {% for luokka in luokat %}
+        <tr class="text-center">
+            <td><a href="{{base_path}}/luokka/{{luokka.luokka_id}}">{{luokka.nimi}}</a></td>
+            <th class="text-center">???</th>
+
+            <th class="text-center"><a class="btn btn-default btn-sm" href="{{base.path}}/tehtava/{{tehtava.tehtava_id}}/edit">Poista</a></th>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<p>
+    <a href="{{base_path}}/luokka/uusi" class="btn btn-success">Lisää luokka</a>
+</p>
+{% endblock %}

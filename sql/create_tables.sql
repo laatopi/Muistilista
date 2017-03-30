@@ -18,15 +18,11 @@ CREATE TABLE Tehtava(
 CREATE TABLE Luokka(
   luokka_id SERIAL PRIMARY KEY,
   nimi varchar(50) NOT NULL,
-  ylaluokka INTEGER REFERENCES Luokka(luokka_id)
+  kayttaja_id INTEGER REFERENCES Kayttaja(kayttaja_id)
 );
 
-CREATE TABLE LuokkaApuTaulukko(
+CREATE TABLE Liitostaulukko(
   tehtava_id INTEGER REFERENCES Tehtava(tehtava_id) NOT NULL,
   luokka_id INTEGER REFERENCES Luokka(luokka_id) NOT NULL
 );
 
-CREATE TABLE AlaluokkaApuTaulukko(
-  ylaluokka_id INTEGER REFERENCES Luokka(luokka_id) NOT NULL,  
-  alaluokka_id INTEGER REFERENCES Luokka(luokka_id) NOT NULL
-);

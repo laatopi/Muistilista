@@ -55,14 +55,10 @@ class tehtava extends BaseModel {
     }
 
     public function tallenna() {
-        // Lisätään RETURNING id tietokantakyselymme loppuun, niin saamme lisätyn rivin id-sarakkeen arvon
         $query = DB::connection()->prepare('INSERT INTO Tehtava (nimi, lisayspaiva, tarkeysaste, deadline, kuvaus, kayttaja_id) VALUES (:nimi, NOW(), :tarkeysaste, :deadline, :kuvaus, 1) RETURNING tehtava_id');
-        // Muistathan, että olion attribuuttiin pääse syntaksilla $this->attribuutin_nimi
         $query->execute(array('nimi' => $this->nimi, 'tarkeysaste' => $this->tarkeysaste, 'deadline' => $this->deadline, 'kuvaus' => $this->kuvaus));
-        // Haetaan kyselyn tuottama rivi, joka sisältää lisätyn rivin id-sarakkeen arvon
         $row = $query->fetch();
-        // Asetetaan lisätyn rivin id-sarakkeen arvo oliomme id-attribuutin arvoksi
-        $this->tehtava_idid = $row['tehtava_id'];
+        $this->tehtava_id = $row['tehtava_id'];
     }
 
 }

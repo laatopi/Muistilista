@@ -4,7 +4,6 @@
 class HelloWorldController extends BaseController {
 
     public static function index() {
-        // make-metodi renderöi app/views-kansiossa sijaitsevia tiedostoja
         echo 'Tämä on etusivu!';
     }
 
@@ -13,11 +12,17 @@ class HelloWorldController extends BaseController {
         $kayttajat = kayttaja::all();
         $Pyykki = tehtava::find(1);
         $tehtavat = tehtava::all();
-        // Kint-luokan dump-metodi tulostaa muuttujan arvon
+        $luokat = luokka::all();
+        $ekaluokka = luokka::find(1);
         Kint::dump($kayttajat);
         Kint::dump($Taneli);
         Kint::dump($Pyykki);
         Kint::dump($tehtavat);
+        Kint::dump($luokat);
+        Kint::dump($ekaluokka);
+                
+        
+        
     }
 
     public static function etusivu() {
