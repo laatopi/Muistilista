@@ -1,9 +1,14 @@
 {% extends "base.html" %}
 {% block content %}
 <h1>{{tehtava.nimi}}</h1>
-<p>
-    <button class="btn btn-danger">Poista</button> <a href="#" class="btn btn-default">Muokkaa</a>
-</p>
+
+<form method="post" action="{{base_path}}/tehtava/{{tehtava.tehtava_id}}/poista" style="display: inline-block;">
+    <button type="submit" class="btn btn-danger">Poista</button>
+</form>
+
+
+<a class="btn btn-default btn-sm" href="{{base_path}}/tehtava/{{tehtava.tehtava_id}}/edit">Muokkaa</a>
+
 <ul>
     <li><strong>Lisäyspäivä:</strong> {{tehtava.lisayspaiva}}</li>
     <li><strong>Tärkeysaste:</strong> {{tehtava.tarkeysaste}}</li>
@@ -16,5 +21,5 @@
     <li><strong>Deadline:</strong> {{tehtava.deadline}}</li>
     <li><strong>Luokat:</strong><a href="#">Vapaa-aika</a> <a href="#">Kotityöt</a></li>
 </ul>
-<p1>{{tehtava.kuvaus}}</p1>
+<p>{{tehtava.kuvaus}}</p>
 {% endblock %}

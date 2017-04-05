@@ -27,9 +27,21 @@ class LuokkaController extends BaseController {
             'nimi' => $params['nimi'],
         ));
 
-        $luokka->tallenna();
+        $errors = $luokka->errors();
+        if (count($errors) == 0) {
+            $luokka->tallenna();
 
-        Redirect::to('/luokka/' . $luokka->luokka_id, array('message' => 'Luokka lisätty!'));
+            Redirect::to('/luokka/' . $luokka->luokka_id, array('message' => 'Luokka lisätty!'));
+        } else {
+            View::make('uusiluokka.html', array('errors' => $errors));
+        }
+    }
+
+    public static function poista($luokka_id) {
+        $luokka = new luokka(array('luokka_id' => $luokka_id));
+        $luokka->poista();
+
+        Redirect::to('/luokka', array('message' => 'Luokka on poistettu onnistuneesti!'));
     }
 
 }

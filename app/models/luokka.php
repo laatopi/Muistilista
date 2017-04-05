@@ -9,8 +9,12 @@ class luokka extends BaseModel {
     }
 
     public static function all() {
-        $query = DB::connection()->prepare('SELECT * FROM Luokka');
-        $query->execute();
+
+        $kayttaja = BaseController::get_user_logged_in();
+        $kayttaja_id = $kayttaja->kayttaja_id;
+
+        $query = DB::connection()->prepare('SELECT * FROM Luokka WHERE kayttaja_id =:kayttaja_id');
+        $query->execute(array('kayttaja_id' => $kayttaja_id));
         $rows = $query->fetchAll();
         $luokat = array();
 
@@ -49,4 +53,12 @@ class luokka extends BaseModel {
         $row = $query->fetch();
         $this->luokka_id = $row['luokka_id'];
     }
+
+    public function poista() {
+        $query = DB::connection()->prepare('DELETE FROM Liitostaulukko WHERE luokka_id = :luokka_id');
+        $query->execute(array('luokka_id' => $this->luokka_id));
+        $query = DB::connection()->prepare('DELETE FROM Luokka WHERE luokka_id = :luokka_id');
+        $query->execute(array('luokka_id' => $this->luokka_id));
+    }
+
 }

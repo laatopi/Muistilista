@@ -1,6 +1,5 @@
 <?php
 
-
 class HelloWorldController extends BaseController {
 
     public static function index() {
@@ -8,21 +7,10 @@ class HelloWorldController extends BaseController {
     }
 
     public static function sandbox() {
-        $Taneli = kayttaja::find(1);
-        $kayttajat = kayttaja::all();
-        $Pyykki = tehtava::find(1);
-        $tehtavat = tehtava::all();
-        $luokat = luokka::all();
-        $ekaluokka = luokka::find(1);
-        Kint::dump($kayttajat);
-        Kint::dump($Taneli);
-        Kint::dump($Pyykki);
-        Kint::dump($tehtavat);
-        Kint::dump($luokat);
-        Kint::dump($ekaluokka);
-                
-        
-        
+
+        $errors = tehtava::haeLuokkienNimetTehtavalle(19);
+
+        Kint::dump($errors);
     }
 
     public static function etusivu() {

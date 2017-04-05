@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% block content %}
-<h1>Käyttäjän Topi Tehtäväluokat</h1>
+<h1>Käyttäjän {{user_logged_in.tunnus}} Tehtäväluokat</h1>
 
 <p>
     <a href="{{base_path}}/luokka/uusi" class="btn btn-success">Lisää luokka</a>
@@ -21,11 +21,12 @@
         <tr class="text-center">
             <td><a href="{{base_path}}/luokka/{{luokka.luokka_id}}">{{luokka.nimi}}</a></td>
             <th class="text-center">???</th>
-
-            <th class="text-center"><a class="btn btn-default btn-sm" href="{{base.path}}/tehtava/{{tehtava.tehtava_id}}/edit">Poista</a></th>
-        </tr>
-        {% endfor %}
-    </tbody>
+    <form method="post" action="{{base_path}}/luokka/{{luokka.luokka_id}}/poista">
+        <th class="text-center"><button type="submit" class="btn btn-danger">Poista</button></th>
+    </form>
+</tr>
+{% endfor %}
+</tbody>
 </table>
 <p>
     <a href="{{base_path}}/luokka/uusi" class="btn btn-success">Lisää luokka</a>

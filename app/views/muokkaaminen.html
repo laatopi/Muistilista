@@ -1,40 +1,83 @@
 {% extends "base.html" %}
 {% block content %}
-<h1>Muokkaa tehtävää Pyykkien pesu</h1>
+<h1>Muokkaa tehtävää {{tehtava.nimi}}</h1>
 
-<form>
+<form method="post" action="{{base_path}}/tehtava/{{tehtava.tehtava_id}}/poista" style="display: inline-block;">
+    <button type="submit" class="btn btn-danger">Poista</button>
+</form>
+
+<form method="post" action="{{base_path}}/tehtava/{{tehtava.tehtava_id}}/edit">
     <div class="checkbox">
         <label>
-            <input type="checkbox">
+            {% if tehtava.suoritettu %}
+            <input type="checkbox" name="suoritettu" checked>
+            {% else %}
+            <input type="checkbox" name="suoritettu">
+            {% endif %}
             Suoritettu
         </label>
     </div>
     <div class="form-group">
         <label>Nimi</label>
-        <input class="form-control" value="Pyykkien pesu" type="text">
+        <input class="form-control" value="{{tehtava.nimi}}" type="text" name="nimi">
     </div>
     <p></p>
     <div>
         <label>Tärkeysaste</label>
         <p class="small"></p>
-        <select>
-            <option value="5">5</option>
+        {% if tehtava.tarkeysaste == 5 %}
+        <select name ="tarkeysaste" class="form-group">
+            <option value="5" selected>5</option>
             <option value="4">4</option>
             <option value="3">3</option>
             <option value="2">2</option>
             <option value="1">1</option>
         </select>
+        {% elseif tehtava.tarkeysaste == 4 %}
+        <select name ="tarkeysaste" class="form-group">
+            <option value="5">5</option>
+            <option value="4" selected>4</option>
+            <option value="3">3</option>
+            <option value="2">2</option>
+            <option value="1">1</option>
+        </select>
+        {% elseif tehtava.tarkeysaste == 3 %}
+        <select name ="tarkeysaste" class="form-group">
+            <option value="5">5</option>
+            <option value="4">4</option>
+            <option value="3" selected>3</option>
+            <option value="2">2</option>
+            <option value="1">1</option>
+        </select>
+        {% elseif tehtava.tarkeysaste == 2 %}
+        <select name ="tarkeysaste" class="form-group">
+            <option value="5">5</option>
+            <option value="4">4</option>
+            <option value="3">3</option>
+            <option value="2" selected>2</option>
+            <option value="1">1</option>
+        </select>
+        {% elseif tehtava.tarkeysaste == 1 %}
+        <select>
+            <option value="5">5</option>
+            <option value="4">4</option>
+            <option value="3">3</option>
+            <option value="2">2</option>
+            <option value="1" selected>1</option>
+        </select>
+        {% endif %}
     </div>
     <p></p>
     <div class="form-group">
         <label>Deadline</label>
-        <input class="form-control" value="25.03.2017" type="text">
+        <input class="form-control" value="{{tehtava.deadline}}" type="text" name="deadline">
     </div>
     <div class="form-group">
         <label>Kuvaus</label>
-        <textarea class="form-control">Pese kaikki pyykit! -Valkopyykit, lakanat, pyyhkeet sekä villapaidat!
+        <textarea class="form-control" name="kuvaus">{{tehtava.kuvaus}}
         </textarea>
     </div>
+    
     <div class="form-group">
         <button type="submit" class="btn btn-primary">Tallenna</button>
     </div>

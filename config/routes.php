@@ -25,8 +25,20 @@ $routes->get('/tehtava/:tehtava_id', function($tehtava_id) {
     TehtavaController::yksittainen($tehtava_id);
 });
 
-$routes->get('/tehtava/1/edit', function() {
-    HelloWorldController::edit();
+$routes->get('/tehtava/:tehtava_id/edit', function($tehtava_id) {
+    TehtavaController::muokkaa($tehtava_id);
+});
+
+$routes->post('/tehtava/:tehtava_id/edit', function($tehtava_id ) {
+    TehtavaController::paivita($tehtava_id);
+});
+
+$routes->post('/tehtava/:tehtava_id/poista', function($tehtava_id) {
+    TehtavaController::poista($tehtava_id);
+});
+
+$routes->post('/luokka/:luokka_id/poista', function($luokka_id) {
+    LuokkaController::poista($luokka_id);
 });
 
 $routes->post('/tehtava', function() {
@@ -48,6 +60,15 @@ $routes->get('/luokka/:luokka_id', function($id) {
 $routes->post('/luokka', function() {
     LuokkaController::varastoi();
 });
+
+$routes->get('/login', function() {
+    KayttajaController::login();
+});
+
+$routes->post('/login', function() {
+    KayttajaController::handle_login();
+});
+
 
 
 

@@ -1,6 +1,9 @@
 {% extends "base.html" %}
 {% block content %}
-<h1>Käyttäjän Topi Kaikki Tehtävät</h1>
+
+{% if user_logged_in %}
+<h1>Käyttäjän {{user_logged_in.tunnus}} Kaikki Tehtävät</h1>
+{% endif %}
 
 <p>
     <a href="{{base_path}}/tehtava/uusi" class="btn btn-success">Lisää tehtävä</a>
@@ -42,7 +45,7 @@
             </td>
             <td>{{tehtava.deadline}}</td>
             <th><a href="#">Vapaa-aika</a>, <a href="#">Kotityöt</a></th>
-            <th><a class="btn btn-default btn-sm" href="{{base.path}}/tehtava/{{tehtava.tehtava_id}}/edit">Muokkaa</a></th>
+            <th><a  class="btn btn-default btn-sm" href="{{base_path}}/tehtava/{{tehtava.tehtava_id}}/edit">Muokkaa</a></th>
         </tr>
         {% endfor %}
     </tbody>
