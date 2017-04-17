@@ -3,6 +3,7 @@
 class LuokkaController extends BaseController {
 
     public static function lista() {
+        self::check_logged_in();
 
         $luokat = luokka::all();
 
@@ -10,17 +11,21 @@ class LuokkaController extends BaseController {
     }
 
     public static function yksiLuokka($luokka_id) {
+        self::check_logged_in();
 
         $luokka = luokka::find($luokka_id);
+        $tehtavat = tehtava::findMonta($luokka_id);
 
-        View::make('yksiluokka.html', array('luokka' => $luokka));
+        View::make('yksiluokka.html', array('luokka' => $luokka, 'tehtavat' => $tehtavat));
     }
 
     public static function uusi() {
+        self::check_logged_in();
         View::make('uusiluokka.html');
     }
 
     public static function varastoi() {
+        self::check_logged_in();
         $params = $_POST;
 
         $luokka = new luokka(array(
@@ -38,6 +43,7 @@ class LuokkaController extends BaseController {
     }
 
     public static function poista($luokka_id) {
+        self::check_logged_in();
         $luokka = new luokka(array('luokka_id' => $luokka_id));
         $luokka->poista();
 

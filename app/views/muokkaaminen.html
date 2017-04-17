@@ -2,6 +2,7 @@
 {% block content %}
 <h1>Muokkaa tehtävää {{tehtava.nimi}}</h1>
 
+
 <form method="post" action="{{base_path}}/tehtava/{{tehtava.tehtava_id}}/poista" style="display: inline-block;">
     <button type="submit" class="btn btn-danger">Poista</button>
 </form>
@@ -77,7 +78,7 @@
         <textarea class="form-control" name="kuvaus">{{tehtava.kuvaus}}
         </textarea>
     </div>
-    
+
     <div class="form-group">
         <button type="submit" class="btn btn-primary">Tallenna</button>
     </div>

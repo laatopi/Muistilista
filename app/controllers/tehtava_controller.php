@@ -3,6 +3,7 @@
 class TehtavaController extends BaseController {
 
     public static function lista() {
+        self::check_logged_in();
 
         $tehtavat = tehtava::all();
 
@@ -11,6 +12,7 @@ class TehtavaController extends BaseController {
     }
 
     public static function yksittainen($tehtava_id) {
+        self::check_logged_in();
 
         $tehtava = tehtava::find($tehtava_id);
 
@@ -18,18 +20,21 @@ class TehtavaController extends BaseController {
     }
 
     public static function uusi() {
+        self::check_logged_in();
         $luokat = luokka::all();
 
         View::make('uusitehtava.html', array('luokat' => $luokat));
     }
 
     public static function muokkaa($tehtava_id) {
+        self::check_logged_in();
         $tehtava = tehtava::find($tehtava_id);
 
         View::make('muokkaaminen.html', array('tehtava' => $tehtava));
     }
 
     public static function paivita($tehtava_id) {
+        self::check_logged_in();
         $params = $_POST;
         $suoritettu = 0;
         if (array_key_exists('suoritettu', $params)) {
@@ -58,6 +63,7 @@ class TehtavaController extends BaseController {
     }
 
     public static function poista($tehtava_id) {
+        self::check_logged_in();
         $tehtava = new tehtava(array('tehtava_id' => $tehtava_id));
         $tehtava->poista();
 
@@ -65,6 +71,7 @@ class TehtavaController extends BaseController {
     }
 
     public static function varastoi() {
+        self::check_logged_in();
         $params = $_POST;
 
         $tehtava = new tehtava(array(

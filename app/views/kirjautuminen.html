@@ -8,7 +8,7 @@
         <label>Käyttäjätunnus</label>
         <input class="form-control" name="tunnus" value="{{username}}" type="text">
     </div>
-    
+
     <div class="form-group col-xs-3 text-left">
         <label>Salasana</label>
         <input class="form-control" name="salasana" type="password">
@@ -19,13 +19,13 @@
     <br>
 
     <div class="text-left"> 
-        <button class="btn btn-primary" class="pull">Kirjaudu sisään</button>
+        <button class="btn btn-primary btn-lg" class="pull">Kirjaudu sisään</button>
     </div>
 </form>
 <br>
 <br>
 <h4>Ei käyttäjätiliä?</h4>
-<button class="btn btn-danger btn-lg">Rekisteröidy!</button>
+<a  class="btn btn-danger btn-lg" href="{{base_path}}/uusi">Rekisteröidy!</a>
 
 
 {% endblock %}

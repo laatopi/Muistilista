@@ -5,7 +5,7 @@ $routes->get('/', function() {
 });
 
 $routes->get('/hiekkalaatikko', function() {
-    HelloWorldController::sandbox();
+    HelloWorldController::etusivu();
 });
 
 $routes->get('/login', function() {
@@ -67,6 +67,18 @@ $routes->get('/login', function() {
 
 $routes->post('/login', function() {
     KayttajaController::handle_login();
+});
+
+$routes->post('/logout', function() {
+    KayttajaController::logout();
+});
+
+$routes->post('/uusitunnus', function() {
+    KayttajaController::uusi();
+});
+
+$routes->get('/uusi', function() {
+    KayttajaController::luo();
 });
 
 

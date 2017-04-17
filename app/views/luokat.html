@@ -20,7 +20,7 @@
         {% for luokka in luokat %}
         <tr class="text-center">
             <td><a href="{{base_path}}/luokka/{{luokka.luokka_id}}">{{luokka.nimi}}</a></td>
-            <th class="text-center">???</th>
+            <th class="text-center">{{luokka.tehtavaLkm}}</th>
     <form method="post" action="{{base_path}}/luokka/{{luokka.luokka_id}}/poista">
         <th class="text-center"><button type="submit" class="btn btn-danger">Poista</button></th>
     </form>

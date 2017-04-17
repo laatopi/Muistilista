@@ -6,7 +6,7 @@ class BaseModel {
     protected $validators;
 
     public function __construct($attributes = null) {
-        $this->validators = array('validoiNimi');
+        $this->validators = array();
         // Käydään assosiaatiolistan avaimet läpi
         foreach ($attributes as $attribute => $value) {
             // Jos avaimen niminen attribuutti on olemassa...
@@ -31,6 +31,7 @@ class BaseModel {
 
     public function validoiNimi() {
         $errors = array();
+        
         if (strlen($this->nimi) < 3) {
             $errors[] = 'Nimen pituuden tulee olla vähintään kolme merkkiä pitkä!';
         }

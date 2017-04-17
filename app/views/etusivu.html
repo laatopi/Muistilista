@@ -6,10 +6,15 @@
 <p class ="text-justify">Tervetuloa Topin muistilista sivustolle! <br> Tällä sivustoilla voit listata
     askareita jotka muuten pääsisi unohtumaan.<br> Askareille voi asettaa tärkeysarvoja ja omia luokkia,
     ja niitä voi sitten ratkaista tarpeen mukaan!<br></p>
-<div class="text-left"> 
-    <button class="btn btn-danger">Rekisteröitymiseen</button>
-    <button class="btn btn-primary" class="pull">Kirjautumiseen</button>
-</div>
+
+{% if user_logged_in %}
+<form  method="post" action="{{base_path}}/logout">
+    <button type="submit" class="btn btn-default">Kirjaudu ulos</button>
+</form>
+{% else %}
+<a href="{{base_path}}/login" class="btn btn-primary">Kirjautumiseen</a>
+{% endif %}
+
 
 
 {% endblock %}

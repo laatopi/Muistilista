@@ -6,15 +6,13 @@ class tehtava extends BaseModel {
 
     public function __construct($ab) {
         parent::__construct($ab);
-        $this->validators = array_merge(array('pvmValidoija'), $this->validators);
+        $this->validators = array_merge(array('pvmValidoija', 'validoiNimi'), $this->validators);
     }
 
     public static function all() {
 
         $kayttaja = BaseController::get_user_logged_in();
         $kayttaja_id = $kayttaja->kayttaja_id;
-
-
 
         $query = DB::connection()->prepare('SELECT * FROM Tehtava WHERE kayttaja_id =:kayttaja_id');
         $query->execute(array('kayttaja_id' => $kayttaja_id));
@@ -60,9 +58,20 @@ class tehtava extends BaseModel {
         return null;
     }
 
+    public static function findMonta($luokka_id) {
+        $tehtavat = array();
+        $liitokset = liitos::findAllWithLuokkaId($luokka_id);
+        foreach ($liitokset as $liitos) {
+            $tehtavat[] = new tehtava(tehtava::find($liitos->tehtava_id));
+        }
+        return $tehtavat;
+    }
+
     public function tallenna() {
-        $query = DB::connection()->prepare('INSERT INTO Tehtava (nimi, lisayspaiva, tarkeysaste, deadline, kuvaus, kayttaja_id) VALUES (:nimi, NOW(), :tarkeysaste, :deadline, :kuvaus, 1) RETURNING tehtava_id');
-        $query->execute(array('nimi' => $this->nimi, 'tarkeysaste' => $this->tarkeysaste, 'deadline' => $this->deadline, 'kuvaus' => $this->kuvaus));
+        $kayttaja = BaseController::get_user_logged_in();
+        $kId = $kayttaja->kayttaja_id;
+        $query = DB::connection()->prepare('INSERT INTO Kayttaja(nimi, lisayspaiva, tarkeysaste, deadline, kuvaus, kayttaja_id) VALUES (:nimi, NOW(), :tarkeysaste, :deadline, :kuvaus, :kayttaja_id) RETURNING tehtava_id');
+        $query->execute(array('nimi' => $this->nimi, 'tarkeysaste' => $this->tarkeysaste, 'deadline' => $this->deadline, 'kuvaus' => $this->kuvaus, 'kayttaja_id' => $kId));
         $row = $query->fetch();
         $this->tehtava_id = $row['tehtava_id'];
     }
@@ -71,7 +80,16 @@ class tehtava extends BaseModel {
         $errors = array();
         $d = DateTime::createFromFormat('Y-m-d', $this->deadline);
         if (($d && $d->format('Y-m-d') === $this->deadline) === FALSE) {
-            $errors[] = 'Ei ole validi paivamaara, lue malli!';
+            $errors[] = 'Ei ole validi päivämäärä, lue malli!';
+        }
+        return $errors;
+    }
+
+    public function validoiNimi() {
+        $errors = array();
+
+        if (strlen($this->nimi) < 3) {
+            $errors[] = 'Nimen pituuden tulee olla vähintään kolme merkkiä pitkä!';
         }
         return $errors;
     }
@@ -103,18 +121,18 @@ WHERE tehtava_id = :tehtava_id');
                 'luokka_id' => $row['luokka_id']
             ));
         }
-        
-        
-        foreach ($liitokset as $liitos){
+
+
+        foreach ($liitokset as $liitos) {
             $luokat[] = $liitos;
         }
         $nimet = array();
-        foreach($luokat as $luokka) {
+        foreach ($luokat as $luokka) {
             $indeksi = luokka::find($liitos->luokka_id);
             $indeksi = $indeksi->nimi;
             $nimet[] = $indeksi;
         }
-        
+
         return $luokat;
     }
 

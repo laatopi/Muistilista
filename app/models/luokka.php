@@ -2,10 +2,11 @@
 
 class luokka extends BaseModel {
 
-    public $luokka_id, $nimi, $kayttaja_id;
+    public $luokka_id, $nimi, $kayttaja_id, $tehtavaLkm;
 
     public function __construct($attributes) {
         parent::__construct($attributes);
+        $this->validators = array_merge(array('validoiNimi'), $this->validators);
     }
 
     public static function all() {
@@ -23,6 +24,7 @@ class luokka extends BaseModel {
                 'luokka_id' => $row['luokka_id'],
                 'nimi' => $row['nimi'],
                 'kayttaja_id' => $row['kayttaja_id'],
+                'tehtavaLkm' => luokka::haeLukumaara($row['luokka_id'])
             ));
         }
 
@@ -48,8 +50,10 @@ class luokka extends BaseModel {
     }
 
     public function tallenna() {
-        $query = DB::connection()->prepare('INSERT INTO Luokka (nimi, kayttaja_id) VALUES (:nimi, 1) RETURNING luokka_id');
-        $query->execute(array('nimi' => $this->nimi));
+        $kayttaja = BaseController::get_user_logged_in();
+        $kId = $kayttaja->kayttaja_id;
+        $query = DB::connection()->prepare('INSERT INTO Luokka (nimi, kayttaja_id) VALUES (:nimi, :kayttaja_id) RETURNING luokka_id');
+        $query->execute(array('nimi' => $this->nimi, 'kayttaja_id' => $kId));
         $row = $query->fetch();
         $this->luokka_id = $row['luokka_id'];
     }
@@ -59,6 +63,25 @@ class luokka extends BaseModel {
         $query->execute(array('luokka_id' => $this->luokka_id));
         $query = DB::connection()->prepare('DELETE FROM Luokka WHERE luokka_id = :luokka_id');
         $query->execute(array('luokka_id' => $this->luokka_id));
+    }
+
+    public static function haeLukumaara($luokka_id) {
+        $tehtavat = tehtava::findMonta($luokka_id);
+        $laskin = 0;
+
+        foreach ($tehtavat as $tehtava) {
+            $laskin = $laskin + 1;
+        }
+        return $laskin;
+    }
+    
+    public function validoiNimi() {
+        $errors = array();
+        
+        if (strlen($this->nimi) < 3) {
+            $errors[] = 'Nimen pituuden tulee olla vähintään kolme merkkiä pitkä!';
+        }
+        return $errors;
     }
 
 }
