@@ -1,6 +1,6 @@
 <?php
 
-class HelloWorldController extends BaseController {
+class YleisController extends BaseController {
 
     public static function index() {
         echo 'Tämä on etusivu!';

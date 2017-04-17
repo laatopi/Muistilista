@@ -1,15 +1,15 @@
 <?php
 
 $routes->get('/', function() {
-    HelloWorldController::etusivu();
+    YleisController::etusivu();
 });
 
 $routes->get('/hiekkalaatikko', function() {
-    HelloWorldController::etusivu();
+    YleisController::etusivu();
 });
 
 $routes->get('/login', function() {
-    HelloWorldController::login();
+    YleisController::login();
 });
 
 $routes->get('/tehtava', function() {
