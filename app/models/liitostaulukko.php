@@ -1,7 +1,8 @@
 <?php
 
 class liitos extends BaseModel {
-    /* Apuluokka jolla toteutetaan tietokantojen monen suhde moneen attribuutti. */
+    /* Apuluokka jolla toteutetaan tietokantojen monen suhde moneen attribuutti.
+     * Jos tehtävällä on luokka, niin sillon se kuuluu siihen luokkaan ja vice-versa. */
 
     // Attribuutit
     public $tehtava_id, $luokka_id;
@@ -46,7 +47,9 @@ class liitos extends BaseModel {
 
         return $liitokset;
     }
-
+    
+    /* Poistaa yksittäiseen tehtävään liittyvät liitokset. */
+    
     public static function poistaTehtavaLiitokset($tehtava_id) {
         $query = DB::connection()->prepare('DELETE FROM Liitostaulukko WHERE tehtava_id = :tehtava_id');
         $query->execute(array('tehtava_id' => $tehtava_id));

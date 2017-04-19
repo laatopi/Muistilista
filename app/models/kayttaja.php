@@ -3,7 +3,7 @@
 class kayttaja extends BaseModel {
     
     /* Käyttäjällä on id, tunnus, salasana sekä varmistus salasana, 
-     * jota käytetään ainoastaan luomis vaiheessa tarkistamaan että salasana
+     * jota käytetään ainoastaan luomisvaiheessa tarkistamaan että salasana
      * on syötetty oikein. */
 
     public $kayttaja_id, $tunnus, $salasana, $vsalasana;
@@ -116,28 +116,28 @@ class kayttaja extends BaseModel {
                 $nmrLkm++;
             }
         }
-
+        //Katsoo onko saman niminen tunnus jo olemassa.
         if (kayttaja::findwithName($this->tunnus) != null) {
             $errors[] = 'Tunnus on jo käytössä, valitse toinen nimi tunnukselle.';
         }
-
+        //katsoo että tunnus on tarpeeksi pitkä.
         if (strlen($this->tunnus) < 4) {
             $errors[] = 'Tunnuksen tulee olla vähintään neljä merkkiä pitkä!';
         }
-
+        //Katsoo että salasana ja varmistussalasana täsmäävät.
         if ($this->salasana != $this->vsalasana) {
             $errors[] = 'Salasanat eivät täsmää!';
         }
-
+        //Katsoo että salasanassa on tarpeeksi numeroita.
         if ($nmrLkm < 3) {
             $errors[] = 'Salasanassa tulee olla vähintään kolme numeroa!';
         }
-
+        //Katsoo että salasana on tarpeeksi pitkä.
         if (strlen($this->salasana) < 6) {
             $errors[] = 'Salasanan pituuden tulee olla vähintään kuusi merkkiä pitkä!';
         }
 
-
+        //palauttaa Errorit. Lista tyhjä jos niitä ei ole löydetty.
         return $errors;
     }
 

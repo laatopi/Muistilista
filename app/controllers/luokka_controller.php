@@ -48,12 +48,14 @@ class LuokkaController extends BaseController {
             'kuvaus' => $params['kuvaus']
         ));
 
+        //katsotaan onko luodussa luokassa ristiriitoja validaattorin kanssa.
         $errors = $luokka->errors();
         if (count($errors) == 0) {
+            //jos ei siirrytään luokkien näkymään ja tallenetaan luokka tietokantaan.
             $luokka->tallenna();
-
-            Redirect::to('/luokka/' . $luokka->luokka_id, array('message' => 'Luokka lisätty!'));
+            Redirect::to('/luokka', array('message' => 'Luokka lisätty!'));
         } else {
+            //muuten näytetään virheet samassa näkymässä.
             View::make('uusiluokka.html', array('errors' => $errors));
         }
     }
@@ -68,6 +70,8 @@ class LuokkaController extends BaseController {
         Redirect::to('/luokka', array('message' => 'Luokka on poistettu onnistuneesti!'));
     }
 
+    /* Luokan muokkaamisen metodi joka tallentaa muokatut tiedot tietokantaan. */
+
     public static function paivita($luokka_id) {
         self::check_logged_in();
         $params = $_POST;
@@ -78,17 +82,21 @@ class LuokkaController extends BaseController {
             'kuvaus' => $params['kuvaus']
         );
 
+        //katsoo onko luokassa mitään validaattori virheitä.
         $luokka = new luokka($attributes);
         $errors = $luokka->errors();
 
         if (count($errors) > 0) {
+            //jos on, niin palataan takaisin luokanmuokkaamis näkymään.
             View::make('luokanmuokkaaminen.html', array('errors' => $errors, 'luokka' => $attributes));
         } else {
+            //jos ei, päivitetään tiedot tietokantaan.
             $luokka->paivita();
-
             Redirect::to('/luokka/' . $luokka->luokka_id, array('message' => 'Luokkaa muokattu!'));
         }
     }
+
+    /* Luo näkymän tehtävän muokkaamiselle. */
 
     public static function muokkaa($luokka_id) {
         self::check_logged_in();

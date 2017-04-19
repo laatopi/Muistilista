@@ -1,13 +1,16 @@
 <?php
 
 class TehtavaController extends BaseController {
+    /* self::check_logged_in() tarkistaa että on kirjauduttu,
+     * eli kaikki metodit jotka sisältävät sen vaativat 
+     * kirjautumisen. */
+
+
     /* Näyttää näkymän kaikista tehtväistä yhtenä listana. */
 
     public static function lista() {
         self::check_logged_in();
-
         $tehtavat = tehtava::all();
-
         View::make('listakaikista.html', array('tehtavat' => $tehtavat));
     }
 
@@ -15,9 +18,7 @@ class TehtavaController extends BaseController {
 
     public static function yksittainen($tehtava_id) {
         self::check_logged_in();
-
         $tehtava = tehtava::find($tehtava_id);
-
         View::make('yksittainen.html', array('tehtava' => $tehtava));
     }
 
@@ -26,7 +27,6 @@ class TehtavaController extends BaseController {
     public static function uusi() {
         self::check_logged_in();
         $luokat = luokka::all();
-
         View::make('uusitehtava.html', array('luokat' => $luokat));
     }
 
@@ -35,9 +35,7 @@ class TehtavaController extends BaseController {
     public static function muokkaa($tehtava_id) {
         self::check_logged_in();
         $tehtava = tehtava::find($tehtava_id);
-
         $luokat = luokka::haeKaikkiLiitokset($tehtava_id);
-
         View::make('muokkaaminen.html', array('tehtava' => $tehtava, 'luokat' => $luokat));
     }
 
@@ -68,8 +66,11 @@ class TehtavaController extends BaseController {
             View::make('muokkaaminen.html', array('errors' => $errors, 'tehtava' => $attributes, 'luokat' => luokka::haeKaikkiLiitokset($tehtava_id)));
         } else {
             $tehtava->paivita();
+
+            //poistaa vanhat liitokset.
             liitos::poistaTehtavaLiitokset($tehtava_id);
 
+            //jos näkymään on laitettu liitoksia, luodaan ne liitostaulukkoon.
             if (array_key_exists('luokat', $params)) {
                 $luokat = $params['luokat'];
                 foreach ($luokat as $luokka) {
@@ -77,6 +78,7 @@ class TehtavaController extends BaseController {
                         'tehtava_id' => $tehtava->tehtava_id,
                         'luokka_id' => $luokka
                     ));
+                    //liitoksen tallentaminen
                     $uusiliitos->tallenna();
                 }
             }
@@ -91,7 +93,6 @@ class TehtavaController extends BaseController {
         self::check_logged_in();
         $tehtava = new tehtava(array('tehtava_id' => $tehtava_id));
         $tehtava->poista();
-
         Redirect::to('/tehtava', array('message' => 'Tehtava on poistettu onnistuneesti!'));
     }
 
@@ -108,14 +109,14 @@ class TehtavaController extends BaseController {
             'kuvaus' => $params['kuvaus'],
         ));
 
+        //Katsoo rikkovatko syötetyt parametrit mitään validaattoreita.
         $errors = $tehtava->errors();
-
         if (count($errors) == 0) {
-
-
+            //Mikäli ei, tallenetaan uusi tehtävä.
             $tehtava->tallenna();
 
             if (array_key_exists('luokat', $params)) {
+                //liitoksien tallentaminen, jos luokkia on lisätty tehtävän luomisessa.
                 $luokat = $params['luokat'];
                 foreach ($luokat as $luokka) {
                     $uusiliitos = new liitos(array(
@@ -125,9 +126,9 @@ class TehtavaController extends BaseController {
                     $uusiliitos->tallenna();
                 }
             }
-
             Redirect::to('/tehtava/' . $tehtava->tehtava_id, array('message' => 'Tehtävä lisätty!'));
         } else {
+            //Virheitä sattunut.
             $luokat = luokka::all();
             View::make('uusitehtava.html', array('errors' => $errors, 'ab' => $params, 'luokat' => $luokat));
         }

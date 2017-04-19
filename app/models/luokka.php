@@ -1,6 +1,13 @@
 <?php
 
 class luokka extends BaseModel {
+    
+    //luokka Id on luokan id, kuvaus luokan kuvaus, käyttäjä id kelle käyttäjälle
+    // se kuuluu.
+    //tehtavaLkm on apumuuttuja joka ei kuulu tietokantaan, vaan näyttää
+    // Monta tehtävää yhteen luokkaan kuuluu.
+    // Tehtäväliitos on apumuuttuja joka ei kuulu tietokantaan,
+    //vaan sitä käytetään näyttämään onko sillä liitos tietyn tehtävän kanssa.
 
     public $luokka_id, $nimi, $kuvaus, $kayttaja_id, $tehtavaLkm, $tehtavaLiitos;
 
@@ -20,7 +27,7 @@ class luokka extends BaseModel {
         $query->execute(array('kayttaja_id' => $kayttaja_id));
         $rows = $query->fetchAll();
         $luokat = array();
-
+        
         foreach ($rows as $row) {
             $luokat[] = new luokka(array(
             'luokka_id' => $row['luokka_id'],
@@ -104,6 +111,7 @@ class luokka extends BaseModel {
         return $errors;
     }
 
+    /* Hakee kaikki liitokset yhdelle tehtävälle luokkina. */
     public static function haeKaikkiLiitokset($tehtava_id) {
         $luokat = luokka::all();
         $tehtava = tehtava::find($tehtava_id);

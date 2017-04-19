@@ -1,6 +1,9 @@
 <?php
 
 class tehtava extends BaseModel {
+    /* Muuttujien pitäisi olla nimensämukaisesti itseselkoisia. Luokat ei ole
+     * varsinainen tietokantaan liittyvä muuttuja, vaan apumuuttuja jolla haetaan luokat
+     * johon tehtävä kuuluu. */
 
     public $tehtava_id, $nimi, $lisayspaiva, $suoritettu, $tarkeysaste, $deadline, $kuvaus, $kayttaja_id, $luokat;
 
@@ -33,6 +36,8 @@ class tehtava extends BaseModel {
                 'kayttaja_id' => $row['kayttaja_id']
             ));
             $luokat = array();
+
+            //Hakee myös luokat muuttujaan kaikki luokat johon tehtävä kuuluu.
             $liitokset = liitos::findAllWithTehtavaId($tehtava->tehtava_id);
             foreach ($liitokset as $liitos) {
                 $luokka = luokka::find($liitos->luokka_id);
@@ -63,6 +68,8 @@ class tehtava extends BaseModel {
                 'kuvaus' => $row['kuvaus'],
                 'kayttaja_id' => $row['kayttaja_id']
             ));
+
+            //Hakee myös luokat muuttujaan kaikki luokat johon tehtävä kuuluu.
             $luokat = array();
             $liitokset = liitos::findAllWithTehtavaId($tehtava->tehtava_id);
             foreach ($liitokset as $liitos) {
@@ -139,7 +146,7 @@ WHERE tehtava_id = :tehtava_id');
         $query->execute(array('tehtava_id' => $this->tehtava_id, 'nimi' => $this->nimi, 'suoritettu' => $this->suoritettu, 'tarkeysaste' => $this->tarkeysaste, 'deadline' => $this->deadline, 'kuvaus' => $this->kuvaus));
     }
 
-    /* Hakee luokkien nimet yhdelle tehtävälle. */
+    /* Hakee luokkien nimet yhdelle tehtävälle. Testimetodi jota ei käytetä koodissa. */
 
     public static function haeLuokkienNimetTehtavalle($tehtava_id) {
         $query = DB::connection()->prepare('SELECT * FROM Liitostaulukko WHERE tehtava_id =:tehtava_id');
