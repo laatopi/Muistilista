@@ -9,10 +9,14 @@ Yleisiä linkkejä:
 
 [Aihekuvaus](http://advancedkittenry.github.io/suunnittelu_ja_tyoymparisto/aiheet/Muistilista.html) 
 
-##Sivustojen näkymät
+##Sivustojen näkymiä (Rikki)
 
 * [Etusivu](laatopi.users.cs.helsinki.fi/tietokantaharkka/)
 * [Login](laatopi.users.cs.helsinki.fi/tietokantaharkka/login)
 * [Tehtavat](laatopi.users.cs.helsinki.fi/tietokantaharkka/tehtava)
 * [Yksittainen](laatopi.users.cs.helsinki.fi/tietokantaharkka/tehtava/1)
 * [Muokkaaminen](laatopi.users.cs.helsinki.fi/tietokantaharkka/tehtava/1/edit)
+
+##Testitunnukset
+* tunnus "tero"
+* salasana "tero123"

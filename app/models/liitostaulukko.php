@@ -1,6 +1,7 @@
 <?php
 
 class liitos extends BaseModel {
+    /* Apuluokka jolla toteutetaan tietokantojen monen suhde moneen attribuutti. */
 
     // Attribuutit
     public $tehtava_id, $luokka_id;
@@ -9,6 +10,8 @@ class liitos extends BaseModel {
     public function __construct($attributes) {
         parent::__construct($attributes);
     }
+
+    /* Hakee liitokset tehtavan perusteella. */
 
     public static function findAllWithTehtavaId($tehtava_id) {
         $query = DB::connection()->prepare('SELECT * FROM Liitostaulukko WHERE tehtava_id =:tehtava_id');
@@ -26,6 +29,8 @@ class liitos extends BaseModel {
         return $liitokset;
     }
 
+    /* Hakee liitokset luokan perusteella. */
+
     public static function findAllWithLuokkaId($luokka_id) {
         $query = DB::connection()->prepare('SELECT * FROM Liitostaulukko WHERE luokka_id =:luokka_id');
         $query->execute(array('luokka_id' => $luokka_id));
@@ -41,6 +46,13 @@ class liitos extends BaseModel {
 
         return $liitokset;
     }
+
+    public static function poistaTehtavaLiitokset($tehtava_id) {
+        $query = DB::connection()->prepare('DELETE FROM Liitostaulukko WHERE tehtava_id = :tehtava_id');
+        $query->execute(array('tehtava_id' => $tehtava_id));
+    }
+
+    /* Tallentaa uuden liitoksen. */
 
     public function tallenna() {
         $query = DB::connection()->prepare('INSERT INTO Liitostaulukko (tehtava_id, luokka_id) VALUES (:tehtava_id, :luokka_id)');

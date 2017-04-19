@@ -79,6 +79,16 @@
         </textarea>
     </div>
 
+    <div class="checkbox">
+        {% for luokka  in luokat %}
+        {% if luokka.tehtavaLiitos == 0  %}
+        <label class="checkbox-inline"><input name="luokat[]" type="checkbox" value="{{luokka.luokka_id}}">{{luokka.nimi}}</label>
+        {% else %}
+        <label class="checkbox-inline"><input name="luokat[]" type="checkbox" value="{{luokka.luokka_id}}" checked>{{luokka.nimi}}</label>
+        {% endif %}
+        {% endfor %}
+    </div>
+
     <div class="form-group">
         <button type="submit" class="btn btn-primary">Tallenna</button>
     </div>

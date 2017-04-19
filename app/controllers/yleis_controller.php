@@ -1,6 +1,8 @@
 <?php
 
 class YleisController extends BaseController {
+    
+    /* Lähinnä jäämä tavaraa sekä debuggaus metodeja. */
 
     public static function index() {
         echo 'Tämä on etusivu!';
@@ -12,11 +14,13 @@ class YleisController extends BaseController {
 
         Kint::dump($errors);
     }
-
+    
+    /* Luo etusivun näkymän. */
     public static function etusivu() {
         View::make('etusivu.html');
     }
-
+    
+    /* Luo kirjautumisen näkymän. */
     public static function login() {
         View::make('kirjautuminen.html');
     }

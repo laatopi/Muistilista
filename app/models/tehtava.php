@@ -2,12 +2,14 @@
 
 class tehtava extends BaseModel {
 
-    public $tehtava_id, $nimi, $lisayspaiva, $suoritettu, $tarkeysaste, $deadline, $kuvaus, $kayttaja_id;
+    public $tehtava_id, $nimi, $lisayspaiva, $suoritettu, $tarkeysaste, $deadline, $kuvaus, $kayttaja_id, $luokat;
 
     public function __construct($ab) {
         parent::__construct($ab);
         $this->validators = array_merge(array('pvmValidoija', 'validoiNimi'), $this->validators);
     }
+
+    /* Palauttaa kaikki tehtävät tietokannasta tietylle käyttäjätunnukselle. */
 
     public static function all() {
 
@@ -20,7 +22,7 @@ class tehtava extends BaseModel {
         $tehtavat = array();
 
         foreach ($rows as $row) {
-            $tehtavat[] = new tehtava(array(
+            $tehtava = new tehtava(array(
                 'tehtava_id' => $row['tehtava_id'],
                 'nimi' => $row['nimi'],
                 'lisayspaiva' => $row['lisayspaiva'],
@@ -30,9 +32,19 @@ class tehtava extends BaseModel {
                 'kuvaus' => $row['kuvaus'],
                 'kayttaja_id' => $row['kayttaja_id']
             ));
+            $luokat = array();
+            $liitokset = liitos::findAllWithTehtavaId($tehtava->tehtava_id);
+            foreach ($liitokset as $liitos) {
+                $luokka = luokka::find($liitos->luokka_id);
+                $luokat[] = $luokka;
+            }
+            $tehtava->luokat = $luokat;
+            $tehtavat[] = $tehtava;
         }
         return $tehtavat;
     }
+
+    /* Palauttaa yksittäisen tehtävän tietokannasta. */
 
     public static function find($tehtava_id) {
 
@@ -47,16 +59,25 @@ class tehtava extends BaseModel {
                 'lisayspaiva' => $row['lisayspaiva'],
                 'suoritettu' => $row['suoritettu'],
                 'tarkeysaste' => $row['tarkeysaste'],
-                'kuvaus' => $row['kuvaus'],
                 'deadline' => $row['deadline'],
+                'kuvaus' => $row['kuvaus'],
                 'kayttaja_id' => $row['kayttaja_id']
             ));
+            $luokat = array();
+            $liitokset = liitos::findAllWithTehtavaId($tehtava->tehtava_id);
+            foreach ($liitokset as $liitos) {
+                $luokka = luokka::find($liitos->luokka_id);
+                $luokat[] = $luokka;
+            }
+            $tehtava->luokat = $luokat;
 
             return $tehtava;
         }
 
         return null;
     }
+
+    /* Palauttaa yksittäisen luokan kaikki tehtävät.  */
 
     public static function findMonta($luokka_id) {
         $tehtavat = array();
@@ -67,14 +88,18 @@ class tehtava extends BaseModel {
         return $tehtavat;
     }
 
+    /* Tallentaa uuden tehtävän tietokantaan. */
+
     public function tallenna() {
         $kayttaja = BaseController::get_user_logged_in();
         $kId = $kayttaja->kayttaja_id;
-        $query = DB::connection()->prepare('INSERT INTO Kayttaja(nimi, lisayspaiva, tarkeysaste, deadline, kuvaus, kayttaja_id) VALUES (:nimi, NOW(), :tarkeysaste, :deadline, :kuvaus, :kayttaja_id) RETURNING tehtava_id');
+        $query = DB::connection()->prepare('INSERT INTO Tehtava (nimi, lisayspaiva, tarkeysaste, deadline, kuvaus, kayttaja_id) VALUES (:nimi, NOW(), :tarkeysaste, :deadline, :kuvaus, :kayttaja_id) RETURNING tehtava_id');
         $query->execute(array('nimi' => $this->nimi, 'tarkeysaste' => $this->tarkeysaste, 'deadline' => $this->deadline, 'kuvaus' => $this->kuvaus, 'kayttaja_id' => $kId));
         $row = $query->fetch();
         $this->tehtava_id = $row['tehtava_id'];
     }
+
+    /* Validoi että päivämäärä on oikeassa muodossa.  */
 
     public function pvmValidoija() {
         $errors = array();
@@ -85,6 +110,8 @@ class tehtava extends BaseModel {
         return $errors;
     }
 
+    /* Validoi tehtävän nimen.  */
+
     public function validoiNimi() {
         $errors = array();
 
@@ -94,13 +121,16 @@ class tehtava extends BaseModel {
         return $errors;
     }
 
-    public function poista() {
+    /* Poistaa tehtävän tietokannasta. */
 
+    public function poista() {
         $query = DB::connection()->prepare('DELETE FROM Liitostaulukko WHERE tehtava_id = :tehtava_id');
         $query->execute(array('tehtava_id' => $this->tehtava_id));
         $query = DB::connection()->prepare('DELETE FROM Tehtava WHERE tehtava_id = :tehtava_id');
         $query->execute(array('tehtava_id' => $this->tehtava_id));
     }
+
+    /* Päivittää yhden tehtävän tiedot tietokantaan muokkaamisen jälkeen. */
 
     public function paivita() {
         $query = DB::connection()->prepare('UPDATE Tehtava
@@ -108,6 +138,8 @@ SET nimi = :nimi, suoritettu = :suoritettu, tarkeysaste = :tarkeysaste, deadline
 WHERE tehtava_id = :tehtava_id');
         $query->execute(array('tehtava_id' => $this->tehtava_id, 'nimi' => $this->nimi, 'suoritettu' => $this->suoritettu, 'tarkeysaste' => $this->tarkeysaste, 'deadline' => $this->deadline, 'kuvaus' => $this->kuvaus));
     }
+
+    /* Hakee luokkien nimet yhdelle tehtävälle. */
 
     public static function haeLuokkienNimetTehtavalle($tehtava_id) {
         $query = DB::connection()->prepare('SELECT * FROM Liitostaulukko WHERE tehtava_id =:tehtava_id');

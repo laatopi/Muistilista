@@ -1,14 +1,20 @@
 <?php
 
 class kayttaja extends BaseModel {
+    
+    /* Käyttäjällä on id, tunnus, salasana sekä varmistus salasana, 
+     * jota käytetään ainoastaan luomis vaiheessa tarkistamaan että salasana
+     * on syötetty oikein. */
 
-    public $kayttaja_id, $tunnus, $salasana, $vSalasana;
+    public $kayttaja_id, $tunnus, $salasana, $vsalasana;
 
     public function __construct($ab) {
         parent::__construct($ab);
         $this->validators = array_merge(array('kayttajaValidoija'), $this->validators);
     }
-
+    
+    /* Palauttaa tietokannasta kaikki tunnukset. */
+    
     public static function all() {
 
         $query = DB::connection()->prepare('SELECT * FROM Kayttaja');
@@ -25,7 +31,9 @@ class kayttaja extends BaseModel {
         }
         return $kayttajat;
     }
-
+    
+    /* Palauttaa tietokannasta yhden tunnuksen tunnuksen nimi hakuperusteena.  */
+    
     public static function findwithName($tunnus) {
         $query = DB::connection()->prepare('SELECT * FROM Kayttaja WHERE tunnus = :tunnus LIMIT 1');
         $query->execute(array('tunnus' => $tunnus));
@@ -43,7 +51,9 @@ class kayttaja extends BaseModel {
 
         return null;
     }
-
+    
+    /* Palauttaa tietokannasta yhden tunnuksen tunnuksen id hakuperusteena. */
+    
     public static function find($kayttaja_id) {
 
         $query = DB::connection()->prepare('SELECT * FROM Kayttaja WHERE kayttaja_id = :kayttaja_id LIMIT 1');
@@ -62,6 +72,8 @@ class kayttaja extends BaseModel {
 
         return null;
     }
+    
+    /* Autenisoi eli katsoo että kirjautuessa tunnus ja salasana täsmäävät tietokannassa löytyviin tunnuksiin. */
 
     public static function authenticate($tunnus, $salasana) {
 
@@ -79,6 +91,8 @@ class kayttaja extends BaseModel {
             return null;
         }
     }
+    
+    /* Tallentaa uuden tunnuksen tietokantaan. */
 
     public function tallenna() {
         $query = DB::connection()->prepare('INSERT INTO Kayttaja (tunnus, salasana) VALUES (:tunnus, :salasana) RETURNING kayttaja_id');
@@ -86,7 +100,10 @@ class kayttaja extends BaseModel {
         $row = $query->fetch();
         $this->kayttaja_id = $row['kayttaja_id'];
     }
-
+    
+    /* Sisältää useamman validoijan tunnuksen luomiseen liittyen.
+     *  */
+    
     public function kayttajaValidoija() {
         $errors = array();
         $chars = str_split($this->salasana);
@@ -108,7 +125,7 @@ class kayttaja extends BaseModel {
             $errors[] = 'Tunnuksen tulee olla vähintään neljä merkkiä pitkä!';
         }
 
-        if ($this->salasana != $this->vSalasana) {
+        if ($this->salasana != $this->vsalasana) {
             $errors[] = 'Salasanat eivät täsmää!';
         }
 

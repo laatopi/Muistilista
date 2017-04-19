@@ -44,7 +44,12 @@
                 {% endif %}
             </td>
             <td>{{tehtava.deadline}}</td>
-            <th><a href="#">Vapaa-aika</a>, <a href="#">Kotityöt</a></th>
+            <th>
+                {% for luokka in tehtava.luokat %}
+              [<a href="{{base_path}}/luokka/{{luokka.luokka_id}}">{{luokka.nimi}}</a>]
+                {% endfor %}
+            </th>
+            <!---<th><a href="#">Vapaa-aika</a>, <a href="#">Kotityöt</a></th> --->
             <th><a  class="btn btn-default btn-sm" href="{{base_path}}/tehtava/{{tehtava.tehtava_id}}/edit">Muokkaa</a></th>
         </tr>
         {% endfor %}

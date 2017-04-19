@@ -81,6 +81,14 @@ $routes->get('/uusi', function() {
     KayttajaController::luo();
 });
 
+$routes->get('/luokka/:luokka_id/edit', function($luokka_id ) {
+    LuokkaController::muokkaa($luokka_id);
+});
+
+$routes->post('/luokka/:luokka_id/edit', function($luokka_id ) {
+    LuokkaController::paivita($luokka_id);
+});
+
 
 
 

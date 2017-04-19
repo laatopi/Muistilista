@@ -2,12 +2,14 @@
 
 class luokka extends BaseModel {
 
-    public $luokka_id, $nimi, $kayttaja_id, $tehtavaLkm;
+    public $luokka_id, $nimi, $kuvaus, $kayttaja_id, $tehtavaLkm, $tehtavaLiitos;
 
     public function __construct($attributes) {
         parent::__construct($attributes);
         $this->validators = array_merge(array('validoiNimi'), $this->validators);
     }
+
+    /* Hakee kaikki yksittäisen käyttäjän luokat. */
 
     public static function all() {
 
@@ -21,15 +23,19 @@ class luokka extends BaseModel {
 
         foreach ($rows as $row) {
             $luokat[] = new luokka(array(
-                'luokka_id' => $row['luokka_id'],
-                'nimi' => $row['nimi'],
-                'kayttaja_id' => $row['kayttaja_id'],
-                'tehtavaLkm' => luokka::haeLukumaara($row['luokka_id'])
+            'luokka_id' => $row['luokka_id'],
+            'nimi' => $row['nimi'],
+            'kuvaus' => $row['kuvaus'],
+            'kayttaja_id' => $row['kayttaja_id'],
+            'tehtavaLkm' => luokka::haeLukumaara($row['luokka_id']),
+            'tehtavaLiitos' => 0
             ));
         }
 
         return $luokat;
     }
+
+    /* Hakee yksittäisen luokan. */
 
     public static function find($luokka_id) {
         $query = DB::connection()->prepare('SELECT * FROM Luokka WHERE luokka_id =:luokka_id LIMIT 1');
@@ -40,6 +46,7 @@ class luokka extends BaseModel {
             $luokka = new luokka(array(
                 'luokka_id' => $row['luokka_id'],
                 'nimi' => $row['nimi'],
+                'kuvaus' => $row['kuvaus'],
                 'kayttaja_id' => $row['kayttaja_id'],
             ));
 
@@ -49,14 +56,18 @@ class luokka extends BaseModel {
         return null;
     }
 
+    /* Tallentaa uuden luokan tietokantaan. */
+
     public function tallenna() {
         $kayttaja = BaseController::get_user_logged_in();
         $kId = $kayttaja->kayttaja_id;
-        $query = DB::connection()->prepare('INSERT INTO Luokka (nimi, kayttaja_id) VALUES (:nimi, :kayttaja_id) RETURNING luokka_id');
-        $query->execute(array('nimi' => $this->nimi, 'kayttaja_id' => $kId));
+        $query = DB::connection()->prepare('INSERT INTO Luokka (nimi, kuvaus, kayttaja_id) VALUES (:nimi, :kuvaus, :kayttaja_id) RETURNING luokka_id');
+        $query->execute(array('nimi' => $this->nimi, 'kuvaus' => $this->kuvaus, 'kayttaja_id' => $kId));
         $row = $query->fetch();
         $this->luokka_id = $row['luokka_id'];
     }
+
+    /* Poistaa luokan tietokannasta. */
 
     public function poista() {
         $query = DB::connection()->prepare('DELETE FROM Liitostaulukko WHERE luokka_id = :luokka_id');
@@ -64,6 +75,8 @@ class luokka extends BaseModel {
         $query = DB::connection()->prepare('DELETE FROM Luokka WHERE luokka_id = :luokka_id');
         $query->execute(array('luokka_id' => $this->luokka_id));
     }
+
+    /* Hakee monta tehtävää yhdellä luokalla on. */
 
     public static function haeLukumaara($luokka_id) {
         $tehtavat = tehtava::findMonta($luokka_id);
@@ -74,14 +87,35 @@ class luokka extends BaseModel {
         }
         return $laskin;
     }
-    
+
+    public function paivita() {
+        $query = DB::connection()->prepare('UPDATE Luokka SET nimi = :nimi, kuvaus = :kuvaus WHERE luokka_id = :luokka_id');
+        $query->execute(array('luokka_id' => $this->luokka_id, 'nimi' => $this->nimi, 'kuvaus' => $this->kuvaus));
+    }
+
+    /* Validoi että luokan nimen pituus on vähintään 3 kirjainta. */
+
     public function validoiNimi() {
         $errors = array();
-        
+
         if (strlen($this->nimi) < 3) {
             $errors[] = 'Nimen pituuden tulee olla vähintään kolme merkkiä pitkä!';
         }
         return $errors;
+    }
+
+    public static function haeKaikkiLiitokset($tehtava_id) {
+        $luokat = luokka::all();
+        $tehtava = tehtava::find($tehtava_id);
+
+        foreach ($luokat as $luokka) {
+            foreach ($tehtava->luokat as $liitos) {
+                if ($luokka->luokka_id == $liitos->luokka_id) {
+                    $luokka->tehtavaLiitos = 1;
+                }
+            }
+        }
+        return $luokat;
     }
 
 }

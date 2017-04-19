@@ -1,13 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
-<h1>{{tehtava.nimi}}</h1>
+<h3>{{tehtava.nimi}}</h3>
 
-<form method="post" action="{{base_path}}/tehtava/{{tehtava.tehtava_id}}/poista" style="display: inline-block;">
-    <button type="submit" class="btn btn-danger">Poista</button>
-</form>
-
-
-<a class="btn btn-default btn-sm" href="{{base_path}}/tehtava/{{tehtava.tehtava_id}}/edit">Muokkaa</a>
 
 <ul>
     <li><strong>Lisäyspäivä:</strong> {{tehtava.lisayspaiva}}</li>
@@ -18,8 +12,19 @@
         {% else %}
         <label class="label label-danger">EI</label>
         {% endif %}
-    <li><strong>Deadline:</strong> {{tehtava.deadline}}</li>
-    <li><strong>Luokat:</strong><a href="#">Vapaa-aika</a> <a href="#">Kotityöt</a></li>
+    <li><strong>Deadline: </strong> {{tehtava.deadline}}</li>
+    <li><strong>Luokat:</strong>  
+        {% for luokka in tehtava.luokat %}
+        [<a href="{{base_path}}/luokka/{{luokka.luokka_id}}">{{luokka.nimi}}</a>]
+        {% endfor %}
+    </li>
 </ul>
 <p>{{tehtava.kuvaus}}</p>
+
+<form method="post" action="{{base_path}}/tehtava/{{tehtava.tehtava_id}}/poista" style="display: inline-block;">
+    <button type="submit" class="btn btn-danger">Poista</button>
+</form>
+
+
+<a class="btn btn-default btn-sm" href="{{base_path}}/tehtava/{{tehtava.tehtava_id}}/edit">Muokkaa</a>
 {% endblock %}

@@ -18,6 +18,7 @@ CREATE TABLE Tehtava(
 CREATE TABLE Luokka(
   luokka_id SERIAL PRIMARY KEY,
   nimi varchar(50) NOT NULL,
+  kuvaus varchar(255),
   kayttaja_id INTEGER REFERENCES Kayttaja(kayttaja_id)
 );
 
