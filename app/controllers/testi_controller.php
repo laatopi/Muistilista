@@ -1,6 +1,6 @@
 <?php
 
-class YleisController extends BaseController {
+class TestiController extends BaseController {
     
     /* Lähinnä jäämä tavaraa sekä debuggaus metodeja. */
 

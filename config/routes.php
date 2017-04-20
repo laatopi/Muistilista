@@ -1,15 +1,15 @@
 <?php
 
 $routes->get('/', function() {
-    YleisController::etusivu();
+    KayttajaController::etusivu();
 });
 
 $routes->get('/hiekkalaatikko', function() {
-    YleisController::etusivu();
+    TestiController::etusivu();
 });
 
 $routes->get('/login', function() {
-    YleisController::login();
+    KayttajaController::login();
 });
 
 $routes->get('/tehtava', function() {

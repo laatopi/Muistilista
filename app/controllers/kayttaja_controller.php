@@ -3,6 +3,13 @@
 class KayttajaController extends BaseController {
     /* Luo kirjautumisen vaativan näkymän. */
 
+    public static function etusivu() {
+        View::make('etusivu.html');
+    }
+
+    /* Luo kirjautumisen näkymän. */
+
+
     public static function login() {
         View::make('kirjautuminen.html');
     }
@@ -16,14 +23,16 @@ class KayttajaController extends BaseController {
 
         $kayttaja = kayttaja::authenticate($params['tunnus'], $params['salasana']);
 
-        
+
         if (!$kayttaja) {
             //Jos tunnus ja salasana eivät täsmää.
-            View::make('kirjautuminen.html', array('error' => 'Väärä käyttäjätunnus tai salasana!', 'tunnus' => $params['tunnus']));
+            $errors = array();
+            $errors[] = 'Väärä käyttäjätunnus tai salasana!';
+            View::make('kirjautuminen.html', array('errors' => $errors, 'tunnus' => $params['tunnus']));
         } else {
             //Jos tunnus ja salasana täsmäävät, luodaan sessio.
             $_SESSION['kayttaja'] = $kayttaja->kayttaja_id;
-            Redirect::to('/', array('message' => 'Tervetuloa takaisin ' . $kayttaja->tunnus . '!'));
+            Redirect::to('/tehtava', array('message' => 'Tervetuloa takaisin ' . $kayttaja->tunnus . '!'));
         }
     }
 
@@ -50,11 +59,12 @@ class KayttajaController extends BaseController {
 
         $errors = $kayttaja->errors();
 
-        
+
         if (count($errors) == 0) {
             //0 virhettä eli luodaan uusi tunnus.
             $kayttaja->tallenna();
-            Redirect::to('/', array('message' => 'Kayttaja luotu!'));
+            $_SESSION['kayttaja'] = $kayttaja->kayttaja_id;
+            Redirect::to('/tehtava', array('message' => 'Käyttäjä luotu!'));
         } else {
             //virheitä löydetty.
             View::make('rekisterointi.html', array('errors' => $errors));
