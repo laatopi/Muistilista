@@ -19,6 +19,9 @@ class TehtavaController extends BaseController {
     public static function yksittainen($tehtava_id) {
         self::check_logged_in();
         $tehtava = tehtava::find($tehtava_id);
+       
+        self::check_logged_oikea_käyttaja($tehtava);
+        
         View::make('yksittainen.html', array('tehtava' => $tehtava));
     }
 
@@ -35,6 +38,9 @@ class TehtavaController extends BaseController {
     public static function muokkaa($tehtava_id) {
         self::check_logged_in();
         $tehtava = tehtava::find($tehtava_id);
+        
+        self::check_logged_oikea_käyttaja($tehtava);
+
         $luokat = luokka::haeKaikkiLiitokset($tehtava_id);
         View::make('muokkaaminen.html', array('tehtava' => $tehtava, 'luokat' => $luokat));
     }

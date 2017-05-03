@@ -18,4 +18,16 @@ class BaseController {
         }
     }
 
+    public static function check_logged_oikea_käyttaja($param) {
+        $kayttaja = self::get_user_logged_in();
+
+        if ($param == null) {
+            Redirect::to('/', array('message' => 'Ei oikeutta mennä sivulle!'));
+        }
+
+        if ($param->kayttaja_id != $kayttaja->kayttaja_id) {
+            Redirect::to('/', array('message' => 'Ei oikeutta mennä sivulle!'));
+        }
+    }
+
 }

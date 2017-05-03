@@ -24,6 +24,9 @@ class LuokkaController extends BaseController {
         self::check_logged_in();
 
         $luokka = luokka::find($luokka_id);
+
+        self::check_logged_oikea_käyttaja($luokka);
+
         $tehtavat = tehtava::findMonta($luokka_id);
 
         View::make('yksiluokka.html', array('luokka' => $luokka, 'tehtavat' => $tehtavat));
@@ -101,6 +104,8 @@ class LuokkaController extends BaseController {
     public static function muokkaa($luokka_id) {
         self::check_logged_in();
         $luokka = luokka::find($luokka_id);
+        
+        self::check_logged_oikea_käyttaja($luokka);
 
         View::make('luokanmuokkaaminen.html', array('luokka' => $luokka));
     }

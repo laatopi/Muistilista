@@ -1,7 +1,6 @@
 <?php
 
 class kayttaja extends BaseModel {
-    
     /* Käyttäjällä on id, tunnus, salasana sekä varmistus salasana, 
      * jota käytetään ainoastaan luomisvaiheessa tarkistamaan että salasana
      * on syötetty oikein. */
@@ -10,11 +9,11 @@ class kayttaja extends BaseModel {
 
     public function __construct($ab) {
         parent::__construct($ab);
-        $this->validators = array_merge(array('kayttajaValidoija'), $this->validators);
+        $this->validators = array_merge(array('samaNimiValidoija', 'nimiPituusValidoija', 'vSalasananValidoija', 'salasanaNumeroValidoija', 'salasanaPituusValidoija'), $this->validators);
     }
-    
+
     /* Palauttaa tietokannasta kaikki tunnukset. */
-    
+
     public static function all() {
 
         $query = DB::connection()->prepare('SELECT * FROM Kayttaja');
@@ -31,9 +30,9 @@ class kayttaja extends BaseModel {
         }
         return $kayttajat;
     }
-    
+
     /* Palauttaa tietokannasta yhden tunnuksen tunnuksen nimi hakuperusteena.  */
-    
+
     public static function findwithName($tunnus) {
         $query = DB::connection()->prepare('SELECT * FROM Kayttaja WHERE tunnus = :tunnus LIMIT 1');
         $query->execute(array('tunnus' => $tunnus));
@@ -51,9 +50,9 @@ class kayttaja extends BaseModel {
 
         return null;
     }
-    
+
     /* Palauttaa tietokannasta yhden tunnuksen tunnuksen id hakuperusteena. */
-    
+
     public static function find($kayttaja_id) {
 
         $query = DB::connection()->prepare('SELECT * FROM Kayttaja WHERE kayttaja_id = :kayttaja_id LIMIT 1');
@@ -72,7 +71,7 @@ class kayttaja extends BaseModel {
 
         return null;
     }
-    
+
     /* Autenisoi eli katsoo että kirjautuessa tunnus ja salasana täsmäävät tietokannassa löytyviin tunnuksiin. */
 
     public static function authenticate($tunnus, $salasana) {
@@ -91,7 +90,7 @@ class kayttaja extends BaseModel {
             return null;
         }
     }
-    
+
     /* Tallentaa uuden tunnuksen tietokantaan. */
 
     public function tallenna() {
@@ -100,45 +99,93 @@ class kayttaja extends BaseModel {
         $row = $query->fetch();
         $this->kayttaja_id = $row['kayttaja_id'];
     }
-    
-    /* Sisältää useamman validoijan tunnuksen luomiseen liittyen.
+
+    /* Alempi osa sisältää useamman validoijan tunnuksen luomiseen liittyen.
      *  */
+
+    //Katsoo onko saman niminen tunnus jo olemassa.
     
-    public function kayttajaValidoija() {
+    public function samaNimiValidoija() {
         $errors = array();
+
+        if (kayttaja::findwithName($this->tunnus) != null) {
+            $errors[] = 'Tunnus on jo käytössä, valitse toinen nimi tunnukselle.';
+        }
+
+        return $errors;
+    }
+    
+    //Katsoo että pituus on kohtuullinen.
+    
+    public function nimiPituusValidoija() {
+        $errors = array();
+
+        if (strlen($this->tunnus) < 4) {
+            $errors[] = 'Tunnuksen tulee olla vähintään neljä merkkiä pitkä!';
+        }
+        if (strlen($this->tunnus) > 16) {
+            $errors[] = 'Tunnuksen tulee olla enintään kuusitoista merkkiä pitkä!';
+        }
+
+        return $errors;
+    }
+    
+    //katsoo että käyttäjä on saanut salasanat oikein.
+
+    public function vSalasananValidoija() {
+        $errors = array();
+
+        if ($this->salasana != $this->vsalasana) {
+            $errors[] = 'Salasanat eivät täsmää!';
+        }
+
+        return $errors;
+    }
+    
+    //katsoo että salasanassa on tarpeeksi kirjaimia sekä numeroita.
+
+    public function salasanaNumeroValidoija() {
+        $errors = array();
+
         $chars = str_split($this->salasana);
         $nmrLkm = 0;
         $kLkm = 0;
 
-
         foreach ($chars as $c) {
             if (Is_numeric($c)) {
                 $nmrLkm++;
+            } else {
+                $kLkm++;
             }
         }
-        //Katsoo onko saman niminen tunnus jo olemassa.
-        if (kayttaja::findwithName($this->tunnus) != null) {
-            $errors[] = 'Tunnus on jo käytössä, valitse toinen nimi tunnukselle.';
-        }
-        //katsoo että tunnus on tarpeeksi pitkä.
-        if (strlen($this->tunnus) < 4) {
-            $errors[] = 'Tunnuksen tulee olla vähintään neljä merkkiä pitkä!';
-        }
-        //Katsoo että salasana ja varmistussalasana täsmäävät.
-        if ($this->salasana != $this->vsalasana) {
-            $errors[] = 'Salasanat eivät täsmää!';
-        }
-        //Katsoo että salasanassa on tarpeeksi numeroita.
+
         if ($nmrLkm < 3) {
             $errors[] = 'Salasanassa tulee olla vähintään kolme numeroa!';
         }
-        //Katsoo että salasana on tarpeeksi pitkä.
-        if (strlen($this->salasana) < 6) {
-            $errors[] = 'Salasanan pituuden tulee olla vähintään kuusi merkkiä pitkä!';
+
+        if ($kLkm < 4) {
+            $errors[] = 'Salasanassa tulee olla vähintään neljä kirjainta!';
         }
 
-        //palauttaa Errorit. Lista tyhjä jos niitä ei ole löydetty.
         return $errors;
     }
+    
+    //Katsoo että salasananpituus on kohtuullinen.
+
+    public function salasanaPituusValidoija() {
+        $errors = array();
+
+        if (strlen($this->salasana) < 8) {
+            $errors[] = 'Salasanan pituuden tulee olla vähintään kahdeksan merkkiä pitkä!';
+        }
+        
+        if (strlen($this->salasana) > 20) {
+            $errors[] = 'Salasanan pituuden tulee olla enintään kaksikymmentä merkkiä pitkä!';
+        }
+
+        return $errors;
+    }
+
+   
 
 }

@@ -31,11 +31,13 @@ class BaseModel {
 
     public function validoiNimi() {
         $errors = array();
-        
+
         if (strlen($this->nimi) < 3) {
             $errors[] = 'Nimen pituuden tulee olla vähintään kolme merkkiä pitkä!';
         }
         return $errors;
     }
+
+    
 
 }
