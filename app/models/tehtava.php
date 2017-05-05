@@ -125,6 +125,10 @@ class tehtava extends BaseModel {
         if (strlen($this->nimi) < 3) {
             $errors[] = 'Nimen pituuden tulee olla vähintään kolme merkkiä pitkä!';
         }
+        
+        if (strlen($this->nimi) > 30) {
+            $errors[] = 'Nimen pituuden tulee olla enintään kolmekymmentä merkkiä pitkä!';
+        }
         return $errors;
     }
 
